@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Food Health Advisor</title>
+
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        background: #0b0f19;
+        font-family: "Segoe UI", sans-serif;
+        color: #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .container {
+        width: 460px;
+        padding: 30px;
+        background: rgba(255, 255, 255, 0.06);
+        border-radius: 16px;
+        box-shadow: 0 0 25px rgba(0, 200, 255, 0.3);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        text-align: center;
+        overflow-y: auto;
+        max-height: 95vh;
+    }
+
+    h1 {
+        font-size: 28px;
+        color: #00d9ff;
+        margin-bottom: 10px;
+    }
+
+    p.subtitle {
+        font-size: 15px;
+        color: #93b8d1;
+        margin-bottom: 18px;
+    }
+
+    .food-image {
+        width: 100%;
+        border-radius: 12px;
+        margin-bottom: 20px;
+        box-shadow: 0 0 12px rgba(0, 200, 255, 0.25);
+    }
+
+    .input-group {
+        text-align: left;
+        margin-bottom: 18px;
+    }
+
+    .input-group label {
+        font-size: 14px;
+        color: #c8d8e6;
+        margin-bottom: 6px;
+        display: block;
+    }
+
+    textarea {
+        width: 100%;
+        height: 90px;
+        padding: 12px;
+        border-radius: 8px;
+        border: none;
+        resize: none;
+        background: rgba(255, 255, 255, 0.15);
+        color: #fff;
+        outline: none;
+    }
+
+    textarea:focus {
+        box-shadow: 0 0 0 2px #00d9ff;
+    }
+
+    button {
+        width: 100%;
+        padding: 14px;
+        font-size: 18px;
+        background: #00d9ff;
+        border: none;
+        border-radius: 8px;
+        font-weight: bold;
+        color: #000;
+        cursor: pointer;
+        transition: 0.2s;
+        margin-top: 10px;
+    }
+
+    button:hover {
+        background: #00f3ff;
+        transform: scale(1.02);
+    }
+
+    #status {
+        margin-top: 15px;
+        font-size: 14px;
+        min-height: 22px;
+        color: #ffd166;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>Food Health Advisor</h1>
+    <p class="subtitle">질환 & 음식 데이터를 입력하면 AI가 영양 조언을 제공합니다.</p>
+
+    <!-- 요청한 이미지 -->
+    <img 
+        class="food-image"
+        src="https://cdn.edujin.co.kr/news/photo/202305/42084_84601_623.jpg"
+        alt="Food Image">
+
+    <!-- Input Section -->
+    <div class="input-group">
+        <label>현재 앓고 있는 질환 (예: 고혈압, 당뇨, 고지혈증)</label>
+        <textarea id="disease" placeholder="예: 고혈압, 위염"></textarea>
+    </div>
+
+    <div class="input-group">
+        <label>오늘 먹은 음식 기록 (예: 삼겹살, 라면, 샐러드 등)</label>
+        <textarea id="foods" placeholder="예: 샐러드, 닭가슴살, 라면"></textarea>
+    </div>
+
+    <button onclick="register()">영양 분석 요청하기</button>
+
+    <div id="status"></div>
+</div>
+
+<script>
+/* ============================================================
+   SERVER URL — 추후 Backend 주소만 넣으면 바로 연결됨
+   ============================================================ */
+const SERVER_URL = ""; // 예시: "https://backend-server.com/api/analyze"
+
+/* ============================================================
+   register() — API 구조 완전 구현 (POST + JSON.stringify)
+   ============================================================ */
+async function register() {
+    const disease = document.getElementById("disease").value.trim();
+    const foods = document.getElementById("foods").value.trim();
+    const statusBox = document.getElementById("status");
+
+    if (!disease || !foods) {
+        statusBox.textContent = "⚠️ 모든 정보를 입력해주세요.";
+        return;
+    }
+
+    statusBox.textContent = "분석 요청 중...";
+
+    const pa
