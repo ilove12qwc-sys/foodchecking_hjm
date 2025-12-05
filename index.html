@@ -136,27 +136,55 @@
 
 <script>
 /* ============================================================
-   SERVER URL — 추후 Backend 주소만 넣으면 바로 연결됨
+   SERVER URL — Replit 백엔드 주소 (/ 뒤에 슬래시 X)
    ============================================================ */
 const SERVER_URL = "https://bbd991ec-8f50-4124-9c0a-e8eb409c88bc-00-3jpfyfckweip8.sisko.replit.dev/register";
+
 /* ============================================================
-   register() — API 구조 완전 구현 (POST + JSON.stringify)
+   register() — 백엔드로 질환/음식 데이터 보내기
    ============================================================ */
 async function register() {
     const disease = document.getElementById("disease").value.trim();
     const foods = document.getElementById("foods").value.trim();
     const statusBox = document.getElementById("status");
 
+    // 1. 유효성 검사
     if (!disease || !foods) {
         statusBox.textContent = "⚠️ 모든 정보를 입력해주세요.";
         return;
     }
 
-    statusBox.textContent = "분석 요청 중...";
+    // 상태 표시
+    statusBox.textContent = "⏳ 분석 요청 중...";
 
-    const pa
+    try {
+        // 2. 백엔드로 POST 요청
+        const response = await fetch(SERVER_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                disease: disease,
+                foods: foods,
+            }),
+        });
 
+        // 3. HTTP 에러 처리
+        if (!response.ok) {
+            statusBox.textContent = "❌ 서버 응답 오류: " + response.status;
+            console.error("응답 코드:", response.status);
+            return;
+        }
 
+        // 4. JSON 파싱
+        const result = await response.json();
+        console.log("✅ 서버 응답:", result);
 
+        // 5. 화면 표시
+        statusBox.textContent = "✅ " + (result.status || result.message || "등록 성공");
 
-
+    } catch (error) {
+        console.error("❌ 요청 중 에러:", error);
+        statusBox.textContent = "❌ 서버에 연결할 수 없습니다.";
+    }
+}
+</script>
