@@ -145,25 +145,29 @@ async function register() {
         return;
     }
 
-    statusBox.textContent = "⏳ 분석 중...";
+    statusBox.innerHTML = "⏳ 서버 응답 대기 중...";
 
     try {
         const response = await fetch("https://bbd991ec-8f50-4124-9c0a-e8eb409c88bc-00-3jpfyfckweip8.sisko.replit.dev/register", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ disease, foods }),
+            body: JSON.stringify({ disease, foods })
         });
 
         const result = await response.json();
+        console.log("📌 서버 결과:", result); // ← 브라우저 콘솔에서도 확인 가능
 
         statusBox.innerHTML = `
-        <br>🔥 <b>AI 분석 결과</b><br><br>
-        📌 위험 분석<br>${JSON.stringify(result.rule_based, null, 2)}<br><br>
-        💡 AI 코멘트<br>${result.ai_comment.replace(/\n/g, "<br>")}
-        `
-
-    } catch {
-        statusBox.textContent = "❌ 서버 연결 실패";
+        <div style="white-space:pre-wrap;text-align:left;margin-top:20px;">
+        🔥 <b>[AI 분석 결과]</b><br><br>
+        📍 위험 분석(JSON 출력)<br>${JSON.stringify(result.rule_based, null, 2)}<br><br>
+        💡 AI 식단 피드백<br>${result.ai_comment.replace(/\n/g,"<br>")}
+        </div>
+        `;
+        
+    } catch (err) {
+        console.error(err);
+        statusBox.textContent = "❌ 오류 발생 — 결과 수신 실패";
     }
 }
 </script>
